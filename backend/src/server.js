@@ -8,7 +8,7 @@ const profileRoutes = require("./routes/profile.routes");
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://cryptovault-dashboard.vercel.app",
   credentials: true,
 }));
 app.use(cookieParser());

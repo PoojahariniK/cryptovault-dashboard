@@ -15,45 +15,47 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
-    try {
-      const result = await authService.loginUser(req.body);
-  
-      res.cookie("token", result.token, {
-        httpOnly: true,
-        secure: false, // true in production (HTTPS)
-        sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-  
-      res.json({
-        user: result.user,
-      });
-    } catch (error) {
-      res.status(401).json({
-        error: error.message,
-      });
-    }
-  }
-  function logout(req, res) {
-    res.clearCookie("token", {
+  try {
+    const result = await authService.loginUser(req.body);
+
+    res.cookie("token", result.token, {
       httpOnly: true,
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production", // ✅ REQUIRED
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // ✅ REQUIRED
+      maxAge: 24 * 60 * 60 * 1000,
     });
-  
-    res.json({ message: "Logged out successfully" });
-  }
-  function me(req, res) {
+
     res.json({
-      id: req.user.id,
-      email: req.user.email,
-      username: req.user.username,
+      user: result.user,
+    });
+  } catch (error) {
+    res.status(401).json({
+      error: error.message,
     });
   }
-  
+}
+
+function logout(req, res) {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+  });
+
+  res.json({ message: "Logged out successfully" });
+}
+
+function me(req, res) {
+  res.json({
+    id: req.user.id,
+    email: req.user.email,
+    username: req.user.username,
+  });
+}
 
 module.exports = {
   register,
   login,
   logout,
-  me
+  me,
 };
