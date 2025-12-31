@@ -240,7 +240,7 @@ DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_NAME=your_db_name
 JWT_SECRET=your_super_secret_key
-NODE_ENV=production
+FRONTEND_URL=your_frontend_base_url
 
 -frontend
 REACT_APP_API_URL=your_backend_base_url

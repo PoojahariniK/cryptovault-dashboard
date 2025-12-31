@@ -7,10 +7,22 @@ const assetRoutes = require("./routes/asset.routes");
 const profileRoutes = require("./routes/profile.routes");
 const app = express();
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow server-to-server
+      if (origin === process.env.FRONTEND_URL) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+app.options("*", cors());
+
 app.use(cookieParser());
 
 app.use(express.json());
