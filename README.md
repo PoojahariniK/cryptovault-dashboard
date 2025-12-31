@@ -2,6 +2,27 @@
 
 A secure, full-stack portfolio intelligence platform for real-time cryptocurrency tracking and analysis.
 
+## Demo video 
+
+A short walkthrough demonstrating authentication, asset management, and live portfolio calculations:
+
+ https://drive.google.com/file/d/1XuDvSzRXvxGlgv-2eSOpwDGSpX2BtrzM/view?usp=sharing
+ 
+## Live Deployment
+
+Frontend (Vercel)
+https://cryptovault-dashboard.vercel.app/
+
+Backend (Railway)
+Deployed as a Dockerized Node.js service on Railway.
+
+Database (MySQL)
+Hosted on Clever Cloud.
+
+Note: The application is fully functional on desktop/laptop browsers. On some mobile devices, authentication behavior may vary due to stricter mobile browser cookie policies when using HttpOnly cookies across cross-domain services.
+This is a known deployment constraint, and it can be addressed with adjustments to cookie configuration and authentication strategy. I am currently working on resolving this to ensure consistent behavior across all devices.
+
+
 ## Table of Contents
 
   - Project Overview
@@ -9,6 +30,8 @@ A secure, full-stack portfolio intelligence platform for real-time cryptocurrenc
   - Key Features
 
   - System Architecture
+
+  - Deployment Architecture
 
   - Technical Stack
 
@@ -58,7 +81,7 @@ The goal is to showcase practical, production-ready full-stack engineering pract
 
 -DevOps and UI
 
- --Fully Dockerized frontend and backend using Docker Compose
+ --Fully Dockerized frontend and backend using Docker Compose and deployed
 
  --Responsive UI built with Tailwind CSS
 
@@ -70,6 +93,16 @@ User Browser
 → Node.js + Express Backend API
 → MySQL Database (Clever Cloud)
 → External Cryptocurrency Market API
+
+## Deployment Architecture
+
+Frontend: React application deployed on Vercel
+
+Backend: Node.js + Express REST API deployed on Railway
+
+Database: MySQL hosted on Clever Cloud
+
+Infrastructure: Docker and Docker Compose for local development and consistency
 
 ## Technical Stack
 -Frontend
@@ -99,8 +132,11 @@ User Browser
 -Infrastructure
 
  --Docker
-
  --Docker Compose
+ --Vercel
+ --Railway
+ --Clever Cloud
+
 
 ## Database Schema
 
@@ -197,12 +233,17 @@ Using Docker (Recommended)
   Backend API: http://localhost:5000
 
 ## Environment Variables
+-backend
 PORT=5000
 DB_HOST=your_db_host
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_NAME=your_db_name
 JWT_SECRET=your_super_secret_key
+NODE_ENV=production
+
+-frontend
+REACT_APP_API_URL=your_backend_base_url
 
 ## Scalability and Future Roadmap
 
