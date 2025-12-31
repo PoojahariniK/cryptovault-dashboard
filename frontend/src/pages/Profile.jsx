@@ -8,6 +8,7 @@ function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /* Username form */
   const {
     register,
     handleSubmit,
@@ -15,6 +16,7 @@ function Profile() {
     formState: { errors },
   } = useForm();
 
+  /* Password form */
   const {
     register: registerPassword,
     handleSubmit: handlePasswordSubmit,
@@ -22,6 +24,9 @@ function Profile() {
     formState: { errors: passwordErrors },
     reset: resetPasswordForm,
   } = useForm();
+
+  const newPassword = watch("newPassword");
+  const oldPassword = watch("oldPassword");
 
   /* Fetch user */
   useEffect(() => {
@@ -44,7 +49,7 @@ function Profile() {
   const onUpdateName = async (data) => {
     try {
       await updateUsername(data.username);
-      toast.success("Username updated");
+      toast.success("Username updated. Please log in again to see changes.");
       setUser({ ...user, username: data.username });
     } catch {
       toast.error("Failed to update username");
@@ -58,12 +63,18 @@ function Profile() {
       return;
     }
 
+    if (data.oldPassword === data.newPassword) {
+      toast.error("New password cannot be the same as the current password");
+      return;
+    }
+
     try {
       await changePassword({
         oldPassword: data.oldPassword,
         newPassword: data.newPassword,
       });
-      toast.success("Password updated successfully");
+
+      toast.success("Password updated. Please log in again.");
       resetPasswordForm();
     } catch (err) {
       toast.error(err.response?.data?.error || "Password change failed");
@@ -77,10 +88,9 @@ function Profile() {
       <Navbar />
 
       <main className="px-8 py-10 max-w-4xl mx-auto space-y-10">
-
         <h1 className="text-3xl font-bold">Profile</h1>
 
-        {/* User Info */}
+        {/* Account Information */}
         <section className="bg-card border border-border rounded-2xl p-6 space-y-6">
           <h2 className="text-xl font-semibold">Account Information</h2>
 
@@ -156,11 +166,16 @@ function Profile() {
                   required: "New password is required",
                   minLength: {
                     value: 8,
-                    message: "Minimum 8 characters",
+                    message: "Password must be at least 8 characters",
                   },
                 })}
                 className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm outline-none"
               />
+              {passwordErrors.newPassword && (
+                <p className="text-red-500 text-xs mt-2">
+                  {passwordErrors.newPassword.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -168,9 +183,9 @@ function Profile() {
               <input
                 type="password"
                 {...registerPassword("confirmPassword", {
+                  required: "Please confirm password",
                   validate: (value) =>
-                    value === watch("newPassword") ||
-                    "Passwords do not match",
+                    value === newPassword || "Passwords do not match",
                 })}
                 className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm outline-none"
               />
@@ -189,7 +204,6 @@ function Profile() {
             </button>
           </form>
         </section>
-
       </main>
     </div>
   );
