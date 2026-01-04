@@ -234,7 +234,7 @@ Using Docker (Recommended)
 
 ## Environment Variables
 -backend
-PORT=5000
+PORT
 DB_HOST=your_db_host
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
